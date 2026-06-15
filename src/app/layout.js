@@ -9,7 +9,7 @@ export const metadata = {
   keywords: 'kira, ai desktop assistant, voice control pc, local llm, offline voice assistant, task automation, private ai, artificial intelligence desktop',
   authors: [{ name: 'Kira Team' }],
   icons: {
-    icon: '/favicon.svg',
+    icon: '/kira_logo.png?v=2',
   },
   openGraph: {
     title: 'Kira | Next-Gen Desktop AI Assistant',
@@ -23,7 +23,7 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <head>
-        <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+        <link rel="icon" href="/kira_logo.png?v=2" type="image/png" />
       </head>
       <body>
         <div className="ambient-glow glow-purple"></div>
