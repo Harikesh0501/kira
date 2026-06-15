@@ -76,10 +76,8 @@ export default function DownloadBanner() {
     runNextStep();
   };
 
-  // Desktop download trigger
-  const handleDesktopDownload = () => {
-    if (desktopState === 'simulating') return;
-
+  // Auto-run simulation on mount to make the terminal look alive
+  useEffect(() => {
     // Windows simulation steps (All-in-One payload bundle)
     const windowsSteps = [
       { text: '📡 Connecting to Kira CDN gateway (secure-cdn.usekira.ai)...', delay: 350, progress: 5 },
@@ -95,25 +93,20 @@ export default function DownloadBanner() {
       { text: '📥 Downloading components... [====================] 100%', delay: 300, progress: 100 },
       { text: '🛡️ Verifying cryptographic SHA-256 signature... OK.', delay: 400, progress: 100 },
       { text: '🎉 SUCCESS: Offline installer compilation finished.', delay: 300, progress: 100 },
-      { text: '💾 Kira-Installer.exe generated. Initiating local download dialog...', delay: 300, progress: 100 }
+      { text: '💾 Kira-Installer.exe compilation finished. Ready for deployment.', delay: 300, progress: 100 }
     ];
 
-    runSimulatedLogs(
-      windowsSteps, 
-      setDesktopLogs, 
-      setDesktopProgress, 
-      setDesktopState,
-      () => {
-        // Trigger real download for Windows
-        const downloadLink = document.createElement('a');
-        downloadLink.href = 'https://drive.google.com/uc?export=download&confirm=t&id=1r8M0cDq1llmlO4cZzCvz2JkQMsM9tkc_';
-        downloadLink.download = 'Kira-Installer.exe';
-        document.body.appendChild(downloadLink);
-        downloadLink.click();
-        document.body.removeChild(downloadLink);
-      }
-    );
-  };
+    const timer = setTimeout(() => {
+      runSimulatedLogs(
+        windowsSteps, 
+        setDesktopLogs, 
+        setDesktopProgress, 
+        setDesktopState
+      );
+    }, 1000);
+
+    return () => clearTimeout(timer);
+  }, []);
 
   // CLI run simulation
   const handleCliSimulation = () => {
@@ -672,18 +665,50 @@ export default function DownloadBanner() {
             {/* Content for Desktop mode */}
             {activeMode === 'desktop' && (
               <div style={{ display: 'flex', flexDirection: 'column', flex: 1 }}>
-                {/* Primary Action Button */}
-                <button 
-                  className="btn-station-action"
-                  onClick={handleDesktopDownload}
-                  disabled={desktopState === 'simulating'}
-                  suppressHydrationWarning={true}
-                >
-                  <Download size={18} />
-                  <span>
-                    {desktopState === 'simulating' ? 'Resolving Manifest & Downloading...' : 'Download Kira Installer (Windows)'}
-                  </span>
-                </button>
+                {/* Status Indicator Card instead of Download button */}
+                <div style={{
+                  background: 'rgba(6, 182, 212, 0.02)',
+                  border: '1px solid rgba(6, 182, 212, 0.15)',
+                  borderRadius: '12px',
+                  padding: '1.25rem',
+                  marginBottom: '1rem',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '1rem',
+                  boxShadow: '0 4px 20px rgba(6, 182, 212, 0.05)',
+                  position: 'relative',
+                  overflow: 'hidden'
+                }}>
+                  {/* Decorative glowing gradient border */}
+                  <div style={{
+                    position: 'absolute',
+                    top: 0, left: 0, width: '4px', height: '100%',
+                    background: 'linear-gradient(to bottom, var(--accent-cyan), #a78bfa)'
+                  }}></div>
+                  
+                  <div style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    width: '40px',
+                    height: '40px',
+                    borderRadius: '8px',
+                    background: 'rgba(6, 182, 212, 0.1)',
+                    color: 'var(--accent-cyan)',
+                    flexShrink: 0
+                  }}>
+                    <Info size={20} />
+                  </div>
+                  
+                  <div style={{ textAlign: 'left' }}>
+                    <div style={{ color: 'white', fontWeight: '700', fontSize: '0.9rem', marginBottom: '0.15rem' }}>
+                      Large Offline Bundle (~3.8 GB)
+                    </div>
+                    <div style={{ color: 'var(--text-secondary)', fontSize: '0.78rem', lineHeight: '1.35' }}>
+                      To initialize installation, run the automated setup command inside the <strong>Developer CLI Script</strong> tab.
+                    </div>
+                  </div>
+                </div>
 
                 {/* Live Console outputs */}
                 <div className="cyber-terminal">
@@ -710,7 +735,7 @@ export default function DownloadBanner() {
                   <div className="terminal-body" ref={desktopTerminalRef}>
                     {desktopLogs.length === 0 ? (
                       <div style={{ color: 'var(--text-muted)', fontFamily: 'monospace' }}>
-                        KIRA CDN pipeline: STANDBY. Click "Download" to resolve manifest and transfer binary payload.
+                        KIRA CDN pipeline: STANDBY. Connecting to CDN network...
                       </div>
                     ) : (
                       desktopLogs.map((log, index) => {
