@@ -36,7 +36,11 @@ export default function Navbar() {
         </nav>
 
         <div className="nav-actions">
-          <a href="#download" className="btn btn-primary btn-sm nav-btn" id="nav-download-cta">
+          <a 
+            href="https://drive.google.com/uc?export=download&confirm=t&id=1r8M0cDq1llmlO4cZzCvz2JkQMsM9tkc_" 
+            className="btn btn-primary btn-sm nav-btn" 
+            id="nav-download-cta"
+          >
             <Download size={16} />
             <span>Get Kira</span>
           </a>
@@ -87,7 +91,7 @@ export default function Navbar() {
             Help Center
           </Link>
           <a 
-            href="#download" 
+            href="https://drive.google.com/uc?export=download&confirm=t&id=1r8M0cDq1llmlO4cZzCvz2JkQMsM9tkc_" 
             onClick={() => setMobileMenuOpen(false)} 
             className="btn btn-primary"
             style={{ width: '100%', justifyContent: 'center', marginTop: '1rem' }}
