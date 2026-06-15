@@ -23,7 +23,7 @@ export default function Navbar() {
         <Link href="/" className="nav-brand" id="nav-brand-link">
           <div className="brand-icon-wrapper" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden' }}>
             <img 
-              src="/kira_logo.png" 
+              src="/kira_logo.png?v=2" 
               alt="KIRA Logo" 
               style={{ width: '28px', height: '28px', objectFit: 'cover', borderRadius: '50%', border: '1px solid rgba(6, 182, 212, 0.3)' }} 
             />
