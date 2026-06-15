@@ -665,8 +665,7 @@ export default function Simulator() {
           <div className="simulator-tabs">
             <button 
               className={`sim-tab-btn ${activeTab === 'console' ? 'active' : ''}`}
-              onClick={() => { if (!running && !runningPlayground) setActiveTab('console'); }}
-              disabled={running || runningPlayground}
+              onClick={() => setActiveTab('console')}
               id="tab-console-btn"
             >
               <Terminal size={14} style={{ display: 'inline', marginRight: '6px', verticalAlign: 'middle' }} />
@@ -674,8 +673,7 @@ export default function Simulator() {
             </button>
             <button 
               className={`sim-tab-btn ${activeTab === 'portal' ? 'active' : ''}`}
-              onClick={() => { if (!running && !runningPlayground) setActiveTab('portal'); }}
-              disabled={running || runningPlayground}
+              onClick={() => setActiveTab('portal')}
               id="tab-portal-btn"
             >
               <Smartphone size={14} style={{ display: 'inline', marginRight: '6px', verticalAlign: 'middle' }} />
@@ -683,8 +681,7 @@ export default function Simulator() {
             </button>
             <button 
               className={`sim-tab-btn ${activeTab === 'playground' ? 'active' : ''}`}
-              onClick={() => { if (!running && !runningPlayground) setActiveTab('playground'); }}
-              disabled={running || runningPlayground}
+              onClick={() => setActiveTab('playground')}
               id="tab-playground-btn"
             >
               <Code size={14} style={{ display: 'inline', marginRight: '6px', verticalAlign: 'middle' }} />
