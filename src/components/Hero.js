@@ -3,6 +3,7 @@
 
 import React, { useEffect, useState, useRef } from 'react';
 import { Download, ArrowRight, Shield, Cpu, Zap, ChevronDown } from 'lucide-react';
+import Link from 'next/link';
 
 const PLATFORMS = {
   Windows: {
@@ -109,10 +110,10 @@ export default function Hero() {
               <span>{currentPlatform.label}</span>
             </a>
 
-            <a href="#simulator" className="btn btn-secondary btn-large" id="hero-demo-btn">
+            <Link href="/playground" className="btn btn-secondary btn-large" id="hero-demo-btn">
               <span>Try Live Demo</span>
               <ArrowRight size={18} />
-            </a>
+            </Link>
           </div>
 
           <div className="system-req">
