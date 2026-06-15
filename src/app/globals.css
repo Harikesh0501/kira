@@ -302,9 +302,9 @@ h2 {
   justify-content: center;
   width: 38px;
   height: 38px;
-  border-radius: 10px;
-  background: linear-gradient(135deg, var(--accent-purple), var(--accent-cyan));
-  padding: 1px;
+  border-radius: 50%;
+  background: transparent;
+  padding: 0;
 }
 
 .brand-icon {
