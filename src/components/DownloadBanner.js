@@ -40,9 +40,9 @@ export default function DownloadBanner() {
     }
   }, [cliLogs]);
 
-  // Constant size metrics for All-in-One installer (1.35 GB total)
-  const installerSize = '1.35 GB';
-  const estDownloadTime = '1m 32s';
+  // Constant size metrics for All-in-One installer (3.8 GB total)
+  const installerSize = '3.8 GB';
+  const estDownloadTime = '12m 40s';
 
   // Commands helper
   const getCliCommand = () => {
@@ -86,7 +86,7 @@ export default function DownloadBanner() {
       { text: '🔒 SSL/TLS handshake completed. Session keys negotiated.', delay: 300, progress: 12 },
       { text: '💻 Target system verified: Windows (x86_64 architecture).', delay: 300, progress: 20 },
       { text: '📦 Querying package manifest for v1.2.0-stable...', delay: 400, progress: 30 },
-      { text: '🔧 Packing All-In-One installer bundle (Size: 1.35 GB)...', delay: 500, progress: 45 },
+      { text: '🔧 Packing All-In-One installer bundle (Size: 3.8 GB)...', delay: 500, progress: 45 },
       { text: '📦 Bundled features: [Core App Shell] [Llama-3 8B Local LLM] [Developer CLI Tools]', delay: 300, progress: 50 },
       { text: '📥 Starting secure payload transfer...', delay: 300, progress: 55 },
       { text: '📥 Downloading components... [====>               ] 25%', delay: 250, progress: 65 },
@@ -641,7 +641,7 @@ export default function DownloadBanner() {
                 <span className="summary-total-size summary-total">{installerSize}</span>
               </div>
               <div className="summary-row" style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>
-                <span>Est. Download Time (~120 Mbps):</span>
+                <span>Est. Download Time (~40 Mbps):</span>
                 <span>{estDownloadTime}</span>
               </div>
             </div>
