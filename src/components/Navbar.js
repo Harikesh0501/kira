@@ -21,8 +21,12 @@ export default function Navbar() {
     <header className={`navbar-header ${scrolled ? 'scrolled' : ''}`}>
       <div className="container nav-container">
         <Link href="/" className="nav-brand" id="nav-brand-link">
-          <div className="brand-icon-wrapper">
-            <Terminal className="brand-icon" />
+          <div className="brand-icon-wrapper" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden' }}>
+            <img 
+              src="/kira_logo.png" 
+              alt="KIRA Logo" 
+              style={{ width: '28px', height: '28px', objectFit: 'cover', borderRadius: '50%', border: '1px solid rgba(6, 182, 212, 0.3)' }} 
+            />
           </div>
           <span className="brand-name">KIRA</span>
         </Link>
