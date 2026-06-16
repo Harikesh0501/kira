@@ -2,7 +2,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { Search, HelpCircle, Terminal, Shield, Cpu, MessageSquare, ChevronDown, Copy, Check, Folder, Smartphone, QrCode, FileText, Code, ChevronLeft, ChevronRight, CheckCircle2, Volume2 } from 'lucide-react';
+import { Search, HelpCircle, Terminal, Shield, Cpu, MessageSquare, ChevronDown, Copy, Check, Folder, Smartphone, QrCode, FileText, Code, ChevronLeft, ChevronRight, CheckCircle2, Volume2, Mail } from 'lucide-react';
 import FAQ from './FAQ';
 
 const CATEGORIES = ['All', 'System Control', 'Security Guard', 'AI & Vision', 'Media & Social'];
@@ -160,6 +160,19 @@ export default function HelpCenter() {
   const [simulatedMessages, setSimulatedMessages] = useState([]);
   const [isSimulatingChat, setIsSimulatingChat] = useState(false);
   const [chatStep, setChatStep] = useState(0); // 0: initial, 1: connecting, 2: message 1 typing, 3: message 2 typing, 4: connected, 5: coupled
+  const [mockEmail, setMockEmail] = useState('');
+  const [mockEmailPassword, setMockEmailPassword] = useState('');
+  const [isSavedEmailSettings, setIsSavedEmailSettings] = useState(false);
+
+  const handleSaveEmailSettingsSimulation = (e) => {
+    if (e) e.preventDefault();
+    if (!mockEmail || !mockEmailPassword) return;
+    setIsSavedEmailSettings(true);
+    handleSpeak("Gmail settings saved successfully, sir!", "en");
+    setTimeout(() => {
+      setIsSavedEmailSettings(false);
+    }, 4000);
+  };
 
   // Parse URL query parameter or hash on mount/navigation to activate respective tab
   useEffect(() => {
@@ -1017,11 +1030,11 @@ export default function HelpCenter() {
 
             {/* Horizontal Setup Tracker */}
             <div className="wizard-tracker">
-              <div className="wizard-tracker-progress" style={{ width: activeStep === 0 ? '0%' : activeStep === 1 ? '50%' : '100%' }}></div>
+              <div className="wizard-tracker-progress" style={{ width: activeStep === 0 ? '0%' : activeStep === 1 ? '33.33%' : activeStep === 2 ? '66.66%' : '100%' }}></div>
               <button 
                 className={`wizard-node ${activeStep >= 0 ? (activeStep > 0 ? 'completed' : 'active') : ''}`}
-                onClick={() => activeStep < 3 && setActiveStep(0)}
-                disabled={activeStep === 3}
+                onClick={() => activeStep < 4 && setActiveStep(0)}
+                disabled={activeStep === 4}
                 id="wizard-step-btn-0"
               >
                 <div className="wizard-node-circle">
@@ -1031,30 +1044,41 @@ export default function HelpCenter() {
               </button>
               <button 
                 className={`wizard-node ${activeStep >= 1 ? (activeStep > 1 ? 'completed' : 'active') : ''}`}
-                onClick={() => activeStep < 3 && setActiveStep(1)}
-                disabled={activeStep === 3}
+                onClick={() => activeStep < 4 && setActiveStep(1)}
+                disabled={activeStep === 4}
                 id="wizard-step-btn-1"
               >
                 <div className="wizard-node-circle">
-                  {activeStep > 1 ? <CheckCircle2 size={18} /> : <Shield size={18} />}
+                  {activeStep > 1 ? <CheckCircle2 size={18} /> : <Mail size={18} />}
+                </div>
+                <span className="wizard-node-label">Email Setup</span>
+              </button>
+              <button 
+                className={`wizard-node ${activeStep >= 2 ? (activeStep > 2 ? 'completed' : 'active') : ''}`}
+                onClick={() => activeStep < 4 && setActiveStep(2)}
+                disabled={activeStep === 4}
+                id="wizard-step-btn-2"
+              >
+                <div className="wizard-node-circle">
+                  {activeStep > 2 ? <CheckCircle2 size={18} /> : <Shield size={18} />}
                 </div>
                 <span className="wizard-node-label">Face Security</span>
               </button>
               <button 
-                className={`wizard-node ${activeStep >= 2 ? (activeStep > 2 ? 'completed' : 'active') : ''}`}
-                onClick={() => activeStep < 3 && setActiveStep(2)}
-                disabled={activeStep === 3}
-                id="wizard-step-btn-2"
+                className={`wizard-node ${activeStep >= 3 ? (activeStep > 3 ? 'completed' : 'active') : ''}`}
+                onClick={() => activeStep < 4 && setActiveStep(3)}
+                disabled={activeStep === 4}
+                id="wizard-step-btn-3"
               >
                 <div className="wizard-node-circle">
-                  {activeStep > 2 ? <CheckCircle2 size={18} /> : <Smartphone size={18} />}
+                  {activeStep > 3 ? <CheckCircle2 size={18} /> : <Smartphone size={18} />}
                 </div>
                 <span className="wizard-node-label">Mobile Pairing</span>
               </button>
             </div>
 
             {/* Wizard Card Body */}
-            {activeStep === 3 ? (
+            {activeStep === 4 ? (
               /* Success / Completed Screen */
               <div className="wizard-card" style={{ animation: 'slideIn 0.4s ease-out' }}>
                 <div className="wizard-card-body" style={{ textAlign: 'center', padding: '4rem 2.5rem' }}>
@@ -1063,13 +1087,14 @@ export default function HelpCenter() {
                   </div>
                   <h3 style={{ fontSize: '1.75rem', color: 'white', fontWeight: 800, marginBottom: '0.75rem' }}>Configuration Complete!</h3>
                   <p style={{ color: 'var(--text-secondary)', fontSize: '0.95rem', maxWidth: '600px', margin: '0 auto 2.5rem auto', lineHeight: '1.6' }}>
-                    KIRA is fully initialized and operational. Your local directory, biometric security profiles, and encrypted companion server are successfully set up and ready to run.
+                    KIRA is fully initialized and operational. Your contact directories, SMTP credentials, face biometric safety profile, and companion server are all paired and configured.
                   </p>
                   
                   {/* Diagnostic Console Box */}
                   <div style={{ background: '#030406', border: '1px solid var(--border-color)', borderRadius: '12px', padding: '1.5rem', maxWidth: '600px', margin: '0 auto 3rem auto', textAlign: 'left', fontFamily: 'monospace', fontSize: '0.8rem' }}>
                     <div style={{ color: '#a78bfa', marginBottom: '0.5rem' }}>$ python kira_check.py --verbose</div>
                     <div style={{ color: '#34d399' }}>✓ VERIFYING CONTACTS INDEX DIRECTORY: Found %USERPROFILE%/.jarvis/contacts.csv</div>
+                    <div style={{ color: '#34d399' }}>✓ SMTP EMAIL HANDSHAKE: Sender credentials validated</div>
                     <div style={{ color: '#34d399' }}>✓ LOADING LOCAL EMBEDDINGS BASE: face_profile.dat verified [HOG model]</div>
                     <div style={{ color: '#34d399' }}>✓ REMOTE FASTAPI DEPLOYMENT HANDSHAKE: Local server listening on port 8000</div>
                     <div style={{ color: '#34d399' }}>✓ TUNNEL TUNNELING TUNNEL: SSH tunnel secure handshake established</div>
@@ -1101,17 +1126,17 @@ export default function HelpCenter() {
                 {/* Header info */}
                 <div className="wizard-card-header">
                   <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-                    <div className={`feat-icon-wrapper ${activeStep === 0 ? 'wrapper-purple' : activeStep === 1 ? 'wrapper-cyan' : 'wrapper-pink'}`} style={{ width: '38px', height: '38px', borderRadius: '50%' }}>
-                      {activeStep === 0 ? <Folder size={15} /> : activeStep === 1 ? <Shield size={15} /> : <Smartphone size={15} />}
+                    <div className={`feat-icon-wrapper ${activeStep === 0 ? 'wrapper-purple' : activeStep === 1 ? 'wrapper-purple' : activeStep === 2 ? 'wrapper-cyan' : 'wrapper-pink'}`} style={{ width: '38px', height: '38px', borderRadius: '50%' }}>
+                      {activeStep === 0 ? <Folder size={15} /> : activeStep === 1 ? <Mail size={15} /> : activeStep === 2 ? <Shield size={15} /> : <Smartphone size={15} />}
                     </div>
                     <div>
                       <h4 style={{ color: 'white', fontSize: '1.15rem', fontWeight: 800, margin: 0 }}>
-                        {activeStep === 0 ? 'Sync Contact Book Directory' : activeStep === 1 ? 'Enroll Offline Face Security Profile' : 'QR Companion & WhatsApp Auto-Pairing'}
+                        {activeStep === 0 ? 'Sync Contact Book Directory' : activeStep === 1 ? 'Configure SMTP Gmail Settings' : activeStep === 2 ? 'Enroll Offline Face Security Profile' : 'QR Companion & WhatsApp Auto-Pairing'}
                       </h4>
                     </div>
                   </div>
                   <span style={{ fontSize: '0.75rem', fontFamily: 'monospace', color: 'var(--text-muted)' }}>
-                    STEP {activeStep + 1} OF 3
+                    STEP {activeStep + 1} OF 4
                   </span>
                 </div>
 
@@ -1209,6 +1234,99 @@ export default function HelpCenter() {
                       {/* Left info */}
                       <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
                         <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', lineHeight: '1.6', margin: 0 }}>
+                          Configure KIRA to send emails using SMTP and check unread emails using IMAP. This allows voice commands like <em>"Email Papa"</em> or <em>"Summarize my emails"</em>.
+                        </p>
+
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+                          <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'flex-start' }}>
+                            <div style={{ width: '6px', height: '6px', borderRadius: '50%', background: 'var(--accent-cyan)', marginTop: '0.55rem', flexShrink: 0 }}></div>
+                            <span style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>
+                              <strong>Sender Gmail Address:</strong> Enter your Gmail address in the Companion settings tab.
+                            </span>
+                          </div>
+                          <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'flex-start' }}>
+                            <div style={{ width: '6px', height: '6px', borderRadius: '50%', background: 'var(--accent-cyan)', marginTop: '0.55rem', flexShrink: 0 }}></div>
+                            <span style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>
+                              <strong>Gmail App Password:</strong> Enter your 16-character Google App Password (not your regular Gmail password).
+                            </span>
+                          </div>
+                          <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'flex-start' }}>
+                            <div style={{ width: '6px', height: '6px', borderRadius: '50%', background: 'var(--accent-cyan)', marginTop: '0.55rem', flexShrink: 0 }}></div>
+                            <span style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>
+                              <strong>Google Account Setup:</strong> Enable 2-Step Verification in Google Account &rarr; Security &rarr; App Passwords to generate it.
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Right Mock Settings Panel */}
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', background: '#080c14', border: '1px solid var(--border-color)', borderRadius: '12px', padding: '1.5rem', maxWidth: '340px', margin: '0 auto', width: '100%', boxSizing: 'border-box' }}>
+                        <div style={{ borderBottom: '1px solid rgba(0, 240, 255, 0.15)', paddingBottom: '6px', marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                          <span style={{ color: 'var(--accent-cyan)', fontSize: '0.95rem', fontWeight: 700, fontFamily: 'Rajdhani, sans-serif', textTransform: 'uppercase' }}>⚙️ Companion Settings</span>
+                        </div>
+                        
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                          <label style={{ color: 'var(--text-color)', fontSize: '0.8rem', fontWeight: 'bold' }}>Sender Gmail Address</label>
+                          <input 
+                            type="email" 
+                            placeholder="yourgmail@gmail.com" 
+                            value={mockEmail}
+                            onChange={(e) => setMockEmail(e.target.value)}
+                            style={{ width: '100%', padding: '8px 12px', background: 'rgba(0, 0, 0, 0.3)', border: '1px solid var(--border-color)', borderRadius: '8px', color: 'white', fontFamily: 'monospace', fontSize: '0.85rem', boxSizing: 'border-box', outline: 'none' }} 
+                          />
+                        </div>
+
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                          <label style={{ color: 'var(--text-color)', fontSize: '0.8rem', fontWeight: 'bold' }}>Gmail App Password</label>
+                          <input 
+                            type="password" 
+                            placeholder="xxxx xxxx xxxx xxxx" 
+                            value={mockEmailPassword}
+                            onChange={(e) => setMockEmailPassword(e.target.value)}
+                            style={{ width: '100%', padding: '8px 12px', background: 'rgba(0, 0, 0, 0.3)', border: '1px solid var(--border-color)', borderRadius: '8px', color: 'white', fontFamily: 'monospace', fontSize: '0.85rem', boxSizing: 'border-box', outline: 'none' }} 
+                          />
+                          <span style={{ color: 'var(--text-muted)', fontSize: '0.65rem', lineHeight: '1.3' }}>Enter 16-character password generated via Google App Passwords.</span>
+                        </div>
+
+                        <button 
+                          onClick={handleSaveEmailSettingsSimulation}
+                          disabled={!mockEmail || !mockEmailPassword}
+                          style={{ 
+                            width: '100%', 
+                            padding: '8px 12px', 
+                            background: isSavedEmailSettings ? 'rgba(52, 211, 153, 0.15)' : 'linear-gradient(135deg, var(--accent-purple) 0%, var(--accent-cyan) 100%)', 
+                            border: isSavedEmailSettings ? '1px solid #34d399' : 'none', 
+                            borderRadius: '8px', 
+                            color: isSavedEmailSettings ? '#34d399' : 'white', 
+                            fontWeight: 'bold', 
+                            fontSize: '0.85rem', 
+                            cursor: 'pointer',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            gap: '0.35rem',
+                            marginTop: '4px',
+                            transition: 'all 0.3s ease'
+                          }}
+                        >
+                          {isSavedEmailSettings ? (
+                            <>
+                              <CheckCircle2 size={14} />
+                              <span>Settings Saved Successfully</span>
+                            </>
+                          ) : (
+                            <span>Save Settings</span>
+                          )}
+                        </button>
+                      </div>
+                    </div>
+                  )}
+
+                  {activeStep === 2 && (
+                    <div className="step-grid">
+                      {/* Left info */}
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+                        <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', lineHeight: '1.6', margin: 0 }}>
                           To keep desktop workflows private, KIRA monitors workstation boundaries and locks Windows instantly if you leave your workstation or if an unregistered user sits down.
                         </p>
 
@@ -1222,7 +1340,7 @@ export default function HelpCenter() {
                           <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'flex-start' }}>
                             <div style={{ width: '6px', height: '6px', borderRadius: '50%', background: 'var(--accent-cyan)', marginTop: '0.55rem', flexShrink: 0 }}></div>
                             <span style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>
-                              Face the webcam directory. KIRA takes **10 offline snap coordinates** to train a localized HOG biometric safety pattern model.
+                              Face the webcam. KIRA takes **10 offline snap coordinates** to train a localized HOG biometric safety pattern model.
                             </span>
                           </div>
                           <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'flex-start' }}>
@@ -1288,7 +1406,7 @@ export default function HelpCenter() {
                     </div>
                   )}
 
-                  {activeStep === 2 && (
+                  {activeStep === 3 && (
                     <div className="step-grid">
                       {/* Left info */}
                       <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
@@ -1620,7 +1738,7 @@ export default function HelpCenter() {
                     style={{ padding: '0.5rem 1.5rem', fontSize: '0.85rem', display: 'flex', alignItems: 'center', gap: '0.35rem' }}
                     id="wizard-btn-next-step"
                   >
-                    <span>{activeStep === 2 ? 'Finish Setup' : 'Next Step'}</span>
+                    <span>{activeStep === 3 ? 'Finish Setup' : 'Next Step'}</span>
                     <ChevronRight size={16} />
                   </button>
                 </div>
