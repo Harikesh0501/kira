@@ -76,6 +76,20 @@ export async function POST(request) {
     // Save data
     await saveWaitlistData(currentData);
 
+    // Send to Google Sheet if configured
+    const googleSheetUrl = process.env.GOOGLE_SHEET_URL;
+    if (googleSheetUrl) {
+      try {
+        await fetch(googleSheetUrl, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email: email.trim() })
+        });
+      } catch (sheetError) {
+        console.error('Google Sheet Post Error:', sheetError);
+      }
+    }
+
     return NextResponse.json({ success: true, message: 'Subscription saved successfully' });
   } catch (error) {
     console.error('Waitlist API Error:', error);
