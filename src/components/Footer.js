@@ -7,10 +7,10 @@ import { Terminal, Heart, Send, Check } from 'lucide-react';
 
 export default function Footer() {
   const [email, setEmail] = useState('');
-  const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
   const [subscribersCount, setSubscribersCount] = useState(0);
   const [error, setError] = useState('');
+  const [successMsg, setSuccessMsg] = useState('');
 
   const fetchCount = async () => {
     try {
@@ -26,13 +26,6 @@ export default function Footer() {
 
   useEffect(() => {
     fetchCount();
-    // Local storage check for waitlist subscription persistence
-    if (typeof window !== 'undefined') {
-      const waitlistSubscribed = localStorage.getItem('kira-waitlist-subscribed');
-      if (waitlistSubscribed === 'true') {
-        setSubmitted(true);
-      }
-    }
   }, []);
 
   const handleSubscribe = async (e) => {
@@ -40,6 +33,7 @@ export default function Footer() {
     if (!email) return;
     setLoading(true);
     setError('');
+    setSuccessMsg('');
     
     try {
       const res = await fetch('/api/waitlist', {
@@ -52,12 +46,12 @@ export default function Footer() {
       
       const data = await res.json();
       if (data.success) {
-        setSubmitted(true);
+        setSuccessMsg("You're on the list! Thank you.");
         fetchCount(); // Refresh count
-        // Persist subscription in local storage
-        if (typeof window !== 'undefined') {
-          localStorage.setItem('kira-waitlist-subscribed', 'true');
-        }
+        setEmail('');
+        setTimeout(() => {
+          setSuccessMsg('');
+        }, 5000);
       } else {
         setError(data.error || 'Something went wrong. Please try again.');
       }
@@ -66,7 +60,6 @@ export default function Footer() {
       setError('Network error. Please check your connection.');
     } finally {
       setLoading(false);
-      setEmail('');
     }
   };
 
@@ -123,43 +116,46 @@ export default function Footer() {
               }
             </p>
             
-            {submitted ? (
-              <div className="waitlist-success" id="waitlist-success-msg">
-                <Check size={16} />
-                <span>You're on the list! Thank you.</span>
-              </div>
-            ) : (
-              <div style={{ display: 'flex', flexDirection: 'column', width: '100%', gap: '0.5rem' }}>
-                <form className="waitlist-form" onSubmit={handleSubscribe} id="waitlist-form">
-                  <input
-                    type="email"
-                    placeholder="Enter email address"
-                    className="waitlist-input"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    disabled={loading}
-                    required
-                    id="waitlist-email-input"
-                    suppressHydrationWarning={true}
-                  />
-                  <button 
-                    type="submit" 
-                    className="waitlist-submit"
-                    disabled={loading}
-                    aria-label="Subscribe"
-                    id="waitlist-submit-btn"
-                    suppressHydrationWarning={true}
-                  >
-                    {loading ? '...' : <Send size={16} />}
-                  </button>
-                </form>
-                {error && (
-                  <p style={{ color: '#ef4444', fontSize: '0.8rem', margin: '0.25rem 0 0 0.5rem', textAlign: 'left' }} id="waitlist-error-msg">
-                    ⚠️ {error}
-                  </p>
-                )}
-              </div>
-            )}
+            <div style={{ display: 'flex', flexDirection: 'column', width: '100%', gap: '0.5rem' }}>
+              <form className="waitlist-form" onSubmit={handleSubscribe} id="waitlist-form">
+                <input
+                  type="email"
+                  placeholder="Enter email address"
+                  className="waitlist-input"
+                  value={email}
+                  onChange={(e) => {
+                    setEmail(e.target.value);
+                    if (error) setError('');
+                    if (successMsg) setSuccessMsg('');
+                  }}
+                  disabled={loading}
+                  required
+                  id="waitlist-email-input"
+                  suppressHydrationWarning={true}
+                />
+                <button 
+                  type="submit" 
+                  className="waitlist-submit"
+                  disabled={loading}
+                  aria-label="Subscribe"
+                  id="waitlist-submit-btn"
+                  suppressHydrationWarning={true}
+                >
+                  {loading ? '...' : <Send size={16} />}
+                </button>
+              </form>
+              {successMsg && (
+                <div className="waitlist-success" id="waitlist-success-msg" style={{ margin: '0.25rem 0 0 0.5rem', display: 'flex', alignItems: 'center', gap: '0.35rem', background: 'rgba(52, 211, 153, 0.1)', border: '1px solid rgba(52, 211, 153, 0.2)', padding: '6px 12px', borderRadius: '8px', width: 'fit-content' }}>
+                  <Check size={14} style={{ color: '#34d399' }} />
+                  <span style={{ color: '#34d399', fontSize: '0.8rem' }}>{successMsg}</span>
+                </div>
+              )}
+              {error && (
+                <p style={{ color: '#ef4444', fontSize: '0.8rem', margin: '0.25rem 0 0 0.5rem', textAlign: 'left' }} id="waitlist-error-msg">
+                  ⚠️ {error}
+                </p>
+              )}
+            </div>
           </div>
         </div>
 
