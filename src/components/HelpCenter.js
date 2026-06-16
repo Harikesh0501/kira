@@ -1234,7 +1234,7 @@ export default function HelpCenter() {
                       {/* Left info */}
                       <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
                         <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', lineHeight: '1.6', margin: 0 }}>
-                          Configure KIRA to send emails using SMTP and check unread emails using IMAP. This allows voice commands like <em>"Email Papa"</em> or <em>"Summarize my emails"</em>.
+                          Configure KIRA to send emails using SMTP and check unread emails using IMAP. This enables voice commands like <em>"Send an email"</em> or <em>"Summarize my inbox"</em>.
                         </p>
 
                         <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
