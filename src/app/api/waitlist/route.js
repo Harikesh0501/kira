@@ -5,7 +5,11 @@ import path from 'path';
 const kvUrl = process.env.KV_REST_API_URL;
 const kvToken = process.env.KV_REST_API_TOKEN;
 
+// In-memory backup for serverless environments with read-only filesystems
+let inMemoryBackup = [];
+
 async function getWaitlistData() {
+  let list = [];
   if (kvUrl && kvToken) {
     try {
       const res = await fetch(`${kvUrl}/get/waitlist:data`, {
@@ -13,26 +17,43 @@ async function getWaitlistData() {
         cache: 'no-store'
       });
       const data = await res.json();
-      return data.result ? JSON.parse(data.result) : [];
+      list = data.result ? JSON.parse(data.result) : [];
     } catch (e) {
       console.error('Vercel KV GET Error:', e);
-      return [];
+      list = [];
     }
   } else {
     const filePath = path.join(process.cwd(), 'waitlist.json');
     if (fs.existsSync(filePath)) {
-      const fileContent = fs.readFileSync(filePath, 'utf8');
       try {
-        return JSON.parse(fileContent);
+        const fileContent = fs.readFileSync(filePath, 'utf8');
+        list = JSON.parse(fileContent);
       } catch (e) {
-        return [];
+        list = [];
       }
     }
-    return [];
   }
+
+  // Merge with in-memory backup to keep track during container lifetime
+  if (inMemoryBackup.length > 0) {
+    const existing = new Set(list.map(e => e.email.toLowerCase()));
+    inMemoryBackup.forEach(entry => {
+      if (!existing.has(entry.email.toLowerCase())) {
+        list.push(entry);
+      }
+    });
+  }
+  return list;
 }
 
 async function saveWaitlistData(data) {
+  // Sync to in-memory backup
+  data.forEach(entry => {
+    if (!inMemoryBackup.some(e => e.email.toLowerCase() === entry.email.toLowerCase())) {
+      inMemoryBackup.push(entry);
+    }
+  });
+
   if (kvUrl && kvToken) {
     try {
       await fetch(`${kvUrl}/set/waitlist:data`, {
@@ -46,9 +67,18 @@ async function saveWaitlistData(data) {
       return false;
     }
   } else {
-    const filePath = path.join(process.cwd(), 'waitlist.json');
-    fs.writeFileSync(filePath, JSON.stringify(data, null, 2), 'utf8');
-    return true;
+    try {
+      const filePath = path.join(process.cwd(), 'waitlist.json');
+      fs.writeFileSync(filePath, JSON.stringify(data, null, 2), 'utf8');
+      return true;
+    } catch (e) {
+      console.warn('Local File Write Warning (expected on Vercel read-only filesystem):', e.message);
+      // If we have Google Sheet configured, return true so the request succeeds
+      if (process.env.GOOGLE_SHEET_URL) {
+        return true;
+      }
+      throw e;
+    }
   }
 }
 
