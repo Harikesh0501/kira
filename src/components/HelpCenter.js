@@ -612,8 +612,8 @@ export default function HelpCenter() {
                   <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>Quick reference guide for daily workflows. Save or print as PDF.</p>
                 </div>
                 <a 
-                  href="/README.md"
-                  download="README.md"
+                  href="/readme1.md"
+                  download="readme1.md"
                   className="btn btn-primary"
                   style={{ padding: '0.6rem 1.5rem', fontSize: '0.85rem', display: 'flex', alignItems: 'center', gap: '0.5rem', textDecoration: 'none' }}
                   id="print-cheat-sheet-btn"
